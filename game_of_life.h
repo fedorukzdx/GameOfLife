@@ -16,7 +16,7 @@ enum class Point {
 class GameOfLife {
 public:
     GameOfLife(int h, int w);
-    GameOfLife(int h, int w, const std::vector<std::pair<int, int>>& points);
+    GameOfLife(int h, int w, const std::vector<std::pair<int, int>> & points);
 
     int Run();
 

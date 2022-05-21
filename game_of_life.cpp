@@ -7,21 +7,21 @@ GameOfLife::GameOfLife(int h, int w)  {
 GameOfLife::GameOfLife(int h, int w, const std::vector<std::pair<int, int>>& points) :
         h_(h),
         w_(w) {
-    curr_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty));
-    prev_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty));
+    curr_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty)); //расширяем массив на 2 клетки и
+    prev_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty)); //заполняем границы нулями
 
     for (const auto& point : points) {
-        prev_grid_[point.first][point.second] = Point::kFull;
+        prev_grid_[point.second][point.first] = Point::kFull;
     }
 }
 
 void GameOfLife::Initialize(int h, int w) {
     h_ = h;
     w_ = w;
-    curr_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty));
-    prev_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty));
+    curr_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty)); //расширяем массив на 2 клетки и
+    prev_grid_.resize(h + 2, std::vector<Point>(w + 2, Point::kEmpty)); //заполняем границы нулями
 
-    srand(time(0));
+    srand(time(0)); //Псевдорандомное заполнение
     for (int i = 1; i <= h_; ++i) {
         for (int j = 1; j <= w_; ++j) {
             if(rand() % 5 < 2) {
@@ -31,7 +31,7 @@ void GameOfLife::Initialize(int h, int w) {
     }
 }
 
-void GameOfLife::CreateWindow() {
+void GameOfLife::CreateWindow() {  //Создание окна с помощью библиотеки SDL2
     const int SCREEN_WIDTH = 10*w_;
     const int SCREEN_HEIGHT = 10*h_;
 
@@ -44,20 +44,24 @@ void GameOfLife::CreateWindow() {
     }
 }
 
+//Функция закрашивания живых точек(закрашиваем нужные треугольники в окне в белый)
+
 void GameOfLife::Print() const {
     SDL_Rect rect {0, 0, 0, 0};
     SDL_FillRect( screenSurface_, nullptr, SDL_MapRGB( screenSurface_->format, 0x00, 0x00, 0x00 ) );
     for (int i = 1; i <= h_; ++i) {
         for (int j = 1; j <= w_; ++j) {
             if (prev_grid_[i][j] == Point::kFull) {
-                rect = SDL_Rect{(j -1) * 10, (i-1) * 10, 10, 10};
+                rect = SDL_Rect{(j-1) * 10, (i-1) * 10, 10, 10};
                 SDL_FillRect( screenSurface_, &rect, SDL_MapRGB( screenSurface_->format, 0xFF, 0xFF, 0xFF ) );
             }
         }
     }
-    SDL_Delay( 250);
+    SDL_Delay( 200);
     SDL_UpdateWindowSurface( window_ );
 }
+
+//Функция считающая следующее поле
 
 bool GameOfLife::PassOneSession() {
     Print();
@@ -90,12 +94,14 @@ bool GameOfLife::PassOneSession() {
             }
         }
     }
+    //Если предыдущее поле и новое равны, функция возвращает переменную false
     if (prev_grid_ == curr_grid_) {
         return true;
     }
     prev_grid_ = curr_grid_;
     return false;
 }
+
 
 int GameOfLife::Run() {
     bool is_end = false;

@@ -4,15 +4,15 @@
 
 int main(int argc, char* args[]) {
 
-    int TypeOfPaint = 0, h = 0, w = 0, PointsNum = 0, x = 0, y = 0;
+    int TypeOfPaint = 0, h = 0, w = 0, x = 0, y = 0;
     bool  SizesAreCorrect = false;
     bool  TypeIsCorrect = false;
     std::vector<std::pair<int, int>> points;
 
-    std::cout << "Enter height and width" << std::endl;
+    std::cout << "Enter width and height" << std::endl;
 
     while(!SizesAreCorrect) {
-        std::cin >> h >> w;
+        std::cin >> w >> h;
         if (h <= 0 || w <= 0) {
             std::cout << "Height or width cannot be non-positive, try again, try again" << std::endl;
         } else {
@@ -36,14 +36,20 @@ int main(int argc, char* args[]) {
         GameOfLife gm(h, w);
         gm.Run();
     } else {
-        std::cout << "Enter points coordinates::" << std::endl;
+        std::cout << "Enter points coordinates:" << std::endl;
         while(true) {
-            std::cin >> x >> y;
-            if(x < 0 || y < 0) {
+            std::cin >> x;
+            if(x < 0) {
                 break;
             }
+            std::cin >> y;
+            if(y < 0) {
+                break;
+            }
+            if(x > w || y > h ) {
+                continue;
+            }
             points.emplace_back(x, y);
-            PointsNum++;
         }
         GameOfLife gm(h, w, points);
         gm.Run();
